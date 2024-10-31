@@ -67,102 +67,103 @@ export const Home: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen ">
+    <div className="min-h-screen bg-gray-100">
       <Navbar onSearch={handleSearch} />
-      {weatherData && (
-        <div>
-          <div className="grid grid-cols-3 gap-x-2 my-2">
-            <div className="bg-gray-300 p-4">
-              <h1 className="text-2xl font-bold ">
+      <div className="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 p-4 grid-rows-2">
+        <div className="bg-gray-300 shadow-md rounded-lg  flex flex-col px-3 gap-4 py-7">
+          {geocoding.isLoading ? (
+            <p>Loading...</p>
+          ) : geocoding.data ? (
+            <>
+              <h2 className="text-2xl font-bold mb-5">
                 {geocoding.data?.results[0].components.country}
-              </h1>
-              <div>
-                <div className="flex flex-col gap-2 pt-6">
-                  <div className="flex gap-2">
-                    <span className="text-orange-700 ">continent :</span>
-                    <span>
-                      {geocoding.data?.results[0].components.continent}
-                    </span>
-                  </div>
-                  <div className="flex gap-2">
-                    <span className="text-orange-700 ">Native Name :</span>
-                    <span>
-                      {geocoding.data?.results[0].annotations.currency.name}
-                    </span>
-                  </div>
-                  <div className="flex gap-2">
-                    <span className="text-orange-700 ">timezone :</span>
-                    <span>
-                      {" "}
-                      {geocoding.data?.results[0].annotations.timezone.name}
-                    </span>
-                  </div>
-                  <div className="flex gap-2">
-                    <span className="text-orange-700 ">symbol :</span>
-                    <span>
-                      {geocoding.data?.results[0].annotations.currency.symbol}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="border bg-yellow-500 flex flex-col gap-3 pb-3">
-              <p className="bg-gray-900 p-4 text-orange-700 text-center text-xl">
-                Calling Code
+              </h2>
+              <p>
+                <strong>continent:</strong>
+                {geocoding.data?.results[0].components.continent}
               </p>
-              <div className="flex flex-col items-center justify-center text-2xl py-16 font-bold">
-                {geocoding.data?.results[0].annotations.callingcode}
-              </div>
-            </div>
-            <div>
-              <img
-                src={`https://www.openstreetmap.org/img/wn/${geocoding.data?.results[0].annotations.flag}@2x.png`}
-              />
-            </div>
-          </div>
-          <div className="flex gap-x-2">
-            <div className="w-1/3 border flex flex-col gap-1">
-              <p className="bg-gray-300 p-4 text-center text-orange-700  text-xl">
-                Capital weather Report
+              <p>
+                <strong>Native Name :</strong>
+                {geocoding.data?.results[0].annotations.currency.name}
               </p>
-
-              <div className=" flex flex-col items-center justify-center px-40 -mt-5">
-                <img
-                  src={`https://openweathermap.org/img/wn/${weatherData.weather[0].icon}@2x.png`}
-                />
-                <p className="text-lg">{weatherData.weather[0]?.description}</p>
-              </div>
-              <div className="flex gap-2 px-2 pb-2">
-                <h3 className="font-semibold">Humidity:</h3>
-                <p>{weatherData.main?.humidity}%</p>
-              </div>
-              <div className="flex gap-2 px-2 pb-2">
-                <h3 className="font-semibold">Pressure:</h3>
-                <p>{weatherData.main?.pressure} hPa</p>
-              </div>
-              <div className="flex gap-2 px-2 pb-2">
-                <h3 className="font-semibold">temp:</h3>
-                <p>{weatherData.main?.temp}°C</p>
-              </div>
-              <div className="flex gap-2 px-2 pb-2">
-                <h3 className="font-semibold">Wind Speed:</h3>
-                <p>{weatherData.wind?.speed} m/s</p>
-              </div>
-              <div className="flex gap-2 px-2 pb-2">
-                <h3 className="font-semibold">Wind Direction:</h3>
-                <p>{weatherData.wind?.deg}°</p>
-              </div>
-            </div>
-            <div className="w-2/3 bg-white shadow-md rounded-lg  flex justify-center items-center">
-              {coordinates ? (
-                <Map lat={coordinates.lat} lon={coordinates.lon} />
-              ) : (
-                <p>No location data available for map.</p>
-              )}
-            </div>
-          </div>
+              <p>
+                <strong>timezone :</strong>{" "}
+                {geocoding.data?.results[0].annotations.timezone.name}
+              </p>
+              <p>
+                <strong>symbol :</strong>{" "}
+                {geocoding.data?.results[0].annotations.currency.symbol}
+              </p>
+            </>
+          ) : (
+            <p>Loading country details...</p>
+          )}
         </div>
-      )}
+
+        <div className="bg-orange-500 text-white text-5xl font-bold shadow-md rounded-lg flex flex-col">
+          <h3 className="text-2xl font-semibold mb-2 py-3 bg-slate-900 text-center">
+            Calling Code
+          </h3>
+          {geocoding.isLoading ? (
+            <p className="p-4">Loading...</p>
+          ) : geocoding.data ? (
+            <div className="flex flex-col justify-center items-center py-32">
+              <p>{geocoding.data.results[0].annotations.callingcode}</p>
+            </div>
+          ) : (
+            <p className="p-4">No data</p>
+          )}
+        </div>
+
+        <div className="bg-white shadow-md rounded-lg p-6 flex items-center justify-center">
+          {/* {flagUrl ? (
+            <img src={flagUrl} alt="Country flag" className="rounded-lg" />
+          ) : (
+            <p>Loading flag...</p>
+          )} */}
+        </div>
+
+        <div className="bg-white shadow-md rounded-lg col-span-1 ">
+          <h3 className="text-xl font-semibold bg-gray-300 py-3 text-orange-500 text-center">
+            Capital Weather Report
+          </h3>
+          {weather.isLoading ? (
+            <p>Loading weather data...</p>
+          ) : weather.data ? (
+            <>
+              <div className="flex flex-col justify-center items-center pb-3">
+                <img
+                  src={`https://openweathermap.org/img/wn/${weather.data.weather[0].icon}@2x.png`}
+                />
+                <p className="text-lg">
+                  {weather.data.weather[0]?.description}
+                </p>
+              </div>
+              <div className="flex  flex-col gap-y-3 px-3">
+                <p>
+                  <strong>Wind Speed:</strong> {weather.data.wind?.speed} m/s
+                </p>
+                <p>
+                  <strong>Temperature:</strong> {weather.data.main?.temp}°F
+                </p>
+                <p>
+                  <strong>Humidity:</strong> {weather.data.main?.humidity}%
+                </p>
+              </div>
+            </>
+          ) : (
+            <p className="p-3">No weather data available.</p>
+          )}
+        </div>
+
+        <div className="bg-white shadow-md rounded-lg col-span-2 p-6 flex justify-center items-center">
+          {coordinates ? (
+            <Map lat={coordinates.lat} lon={coordinates.lon} />
+          ) : (
+            <p>No location data available for map.</p>
+          )}
+        </div>
+      </div>
     </div>
   );
 };
